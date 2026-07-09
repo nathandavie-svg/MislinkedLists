@@ -53,21 +53,7 @@
     font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:600;
     margin:0; color:var(--text);
   }
-  .tabs{
-    display:flex; gap:6px; background:var(--surface);
-    border:1px solid var(--border); border-radius:999px; padding:4px;
-  }
-  .tab-btn{
-    border:none; background:transparent; color:var(--text-dim);
-    font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600;
-    padding:9px 18px; border-radius:999px; cursor:pointer;
-    transition:background .15s, color .15s;
-  }
-  .tab-btn.active{ background:var(--teal); color:#FFFFFF; }
-  .tab-btn:not(.active):hover{ color:var(--text); }
-
-  .view{ display:none; padding:32px 28px 64px; max-width:1180px; margin:0 auto; }
-  .view.active{ display:block; }
+  .view{ display:block; padding:32px 28px 64px; max-width:1180px; margin:0 auto; }
 
   /* ---- Report form ---- */
   .form-wrap{ max-width:640px; margin:0 auto; }
@@ -140,60 +126,8 @@
     text-transform:uppercase;
   }
 
-  /* ---- Dashboard ---- */
-  .stats-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
-  .stat{
-    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
-    padding:16px 18px;
-  }
-  .stat .label{ font-size:11.5px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.08em; margin-bottom:8px; }
-  .stat .value{ font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:600; }
-  .stat .value.flag{ color:var(--teal-dark); }
-
-  .filter-bar{
-    display:flex; flex-wrap:wrap; gap:10px; align-items:end;
-    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
-    padding:16px; margin-bottom:18px;
-  }
-  .filter-field{ display:flex; flex-direction:column; gap:5px; min-width:150px; flex:1; }
-  .filter-field label{ font-size:11px; }
-  .filter-actions{ display:flex; gap:8px; margin-left:auto; }
-
-  .table-wrap{
-    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
-    overflow:hidden;
-  }
-  .table-head{
-    display:flex; justify-content:space-between; align-items:center;
-    padding:14px 18px; border-bottom:1px solid var(--border-soft);
-  }
-  .table-head h3{ font-family:'Space Grotesk',sans-serif; font-size:15px; margin:0; }
-  .table-scroll{ overflow-x:auto; }
-  table{ width:100%; border-collapse:collapse; font-size:13px; min-width:920px; }
-  th{
-    text-align:left; padding:10px 14px; color:var(--text-faint);
-    font-size:11px; text-transform:uppercase; letter-spacing:.06em;
-    border-bottom:1px solid var(--border-soft); white-space:nowrap;
-  }
-  td{ padding:11px 14px; border-bottom:1px solid var(--border-soft); vertical-align:top; }
-  tr:last-child td{ border-bottom:none; }
-  td.mono{ color:var(--text-dim); }
-  .pill{
-    display:inline-block; background:var(--teal-dim); color:var(--teal-dark);
-    font-size:11.5px; font-weight:600; padding:2px 9px; border-radius:999px;
-  }
-  .charts-count{ font-family:'Space Grotesk',sans-serif; font-weight:600; }
-
-  .empty-state{ padding:52px 20px; text-align:center; color:var(--text-dim); }
-  .empty-state svg{ width:48px; height:48px; opacity:0.5; margin-bottom:12px; }
-  .empty-state p{ margin:0; font-size:13.5px; }
-
-  .loading-row{ padding:40px; text-align:center; color:var(--text-faint); font-size:13px; }
-
   @media (max-width: 720px){
     .field-row{ grid-template-columns:1fr; }
-    .stats-row{ grid-template-columns:1fr 1fr; }
-    .filter-actions{ margin-left:0; width:100%; justify-content:flex-end; }
   }
 </style>
 
@@ -205,10 +139,6 @@
       <div class="brand-text">
         <h1>Misrouted Request Log</h1>
       </div>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn active" id="tabBtnReport" onclick="switchTab('report')">Report an issue</button>
-      <button class="tab-btn" id="tabBtnDash" onclick="switchTab('dashboard')">Dashboard</button>
     </div>
   </div>
 
@@ -310,64 +240,11 @@
       </form>
     </div>
   </div>
-
-  <!-- DASHBOARD VIEW -->
-  <div class="view" id="view-dashboard">
-    <div class="stats-row" id="statsRow">
-      <div class="stat"><div class="label">Total reports</div><div class="value" id="statTotal">—</div></div>
-      <div class="stat"><div class="label">Charts affected</div><div class="value flag" id="statCharts">—</div></div>
-      <div class="stat"><div class="label">Top requester</div><div class="value" id="statRequester" style="font-size:18px;">—</div></div>
-      <div class="stat"><div class="label">Last 7 days</div><div class="value" id="statRecent">—</div></div>
-    </div>
-
-    <div class="filter-bar">
-      <div class="filter-field">
-        <label>Provider / site</label>
-        <select id="filterProvider"><option value="">All</option></select>
-      </div>
-      <div class="filter-field">
-        <label>Requester</label>
-        <select id="filterRequester"><option value="">All</option></select>
-      </div>
-      <div class="filter-field">
-        <label>From date</label>
-        <input type="date" id="filterFrom" />
-      </div>
-      <div class="filter-field">
-        <label>To date</label>
-        <input type="date" id="filterTo" />
-      </div>
-      <div class="filter-actions">
-        <button class="btn btn-ghost" onclick="clearFilters()">Clear filters</button>
-      </div>
-    </div>
-
-    <div class="table-wrap">
-      <div class="table-head">
-        <h3 id="tableCount">Reports</h3>
-        <button class="btn btn-primary" onclick="exportCSV()">Export CSV</button>
-      </div>
-      <div class="table-scroll" id="tableScroll">
-        <div class="loading-row" id="loadingRow">Loading reports…</div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <script>
   // ⚠️ PASTE your deployed Google Apps Script Web App URL below (ends in /exec)
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFqLs-iup_isSQxpP_zaU6D3WNLCSXusyWhBLwbvCk8Ymxm9s8Z4IdGmsFcB9IcxrL/exec';
-
-  let allReports = [];
-  let filteredReports = [];
-
-  function switchTab(tab){
-    document.getElementById('view-report').classList.toggle('active', tab === 'report');
-    document.getElementById('view-dashboard').classList.toggle('active', tab === 'dashboard');
-    document.getElementById('tabBtnReport').classList.toggle('active', tab === 'report');
-    document.getElementById('tabBtnDash').classList.toggle('active', tab === 'dashboard');
-    if(tab === 'dashboard') loadReports();
-  }
 
   function clearBanner(){
     const b = document.getElementById('reportBanner');
@@ -444,7 +321,7 @@
       if(!result || result.status !== 'ok'){
         throw new Error('Backend did not confirm the write');
       }
-      showBanner('Report logged. Your admin team can see this on the dashboard immediately.', false);
+      showBanner('Report logged. Your admin team has been notified.', false);
       document.getElementById('reportForm').reset();
       document.getElementById('f_date').value = new Date().toISOString().slice(0,10);
       document.getElementById('f_requester_other_wrap').style.display = 'none';
@@ -457,159 +334,4 @@
     }
   });
 
-  async function loadReports(){
-    const scroll = document.getElementById('tableScroll');
-    scroll.innerHTML = '<div class="loading-row">Loading reports…</div>';
-    try{
-      const response = await fetch(APPS_SCRIPT_URL, { method: 'GET' });
-      const reports = await response.json();
-      reports.sort((a,b)=> new Date(b.date) - new Date(a.date));
-      allReports = reports;
-      populateFilterOptions(reports);
-      applyFilters();
-    }catch(err){
-      console.error('Failed to load reports:', err);
-      scroll.innerHTML = '<div class="empty-state"><p>Could not load reports right now. Try switching tabs again.</p></div>';
-    }
-  }
-
-  function populateFilterOptions(reports){
-    const providerSel = document.getElementById('filterProvider');
-    const requesterSel = document.getElementById('filterRequester');
-    const curProvider = providerSel.value;
-    const curRequester = requesterSel.value;
-
-    const providers = [...new Set(reports.map(r=>r.site).filter(Boolean))].sort();
-    const requesters = [...new Set(reports.map(r=>r.requester).filter(Boolean))].sort();
-
-    providerSel.innerHTML = '<option value="">All</option>' + providers.map(p=>`<option value="${escapeAttr(p)}">${escapeHtml(p)}</option>`).join('');
-    requesterSel.innerHTML = '<option value="">All</option>' + requesters.map(r=>`<option value="${escapeAttr(r)}">${escapeHtml(r)}</option>`).join('');
-
-    providerSel.value = curProvider;
-    requesterSel.value = curRequester;
-  }
-
-  function applyFilters(){
-    const provider = document.getElementById('filterProvider').value;
-    const requester = document.getElementById('filterRequester').value;
-    const from = document.getElementById('filterFrom').value;
-    const to = document.getElementById('filterTo').value;
-
-    filteredReports = allReports.filter(r=>{
-      if(provider && r.site !== provider) return false;
-      if(requester && r.requester !== requester) return false;
-      if(from && r.date < from) return false;
-      if(to && r.date > to) return false;
-      return true;
-    });
-
-    renderStats(filteredReports);
-    renderTable(filteredReports);
-  }
-
-  ['filterProvider','filterRequester','filterFrom','filterTo'].forEach(id=>{
-    document.getElementById(id).addEventListener('change', applyFilters);
-  });
-
-  function clearFilters(){
-    document.getElementById('filterProvider').value = '';
-    document.getElementById('filterRequester').value = '';
-    document.getElementById('filterFrom').value = '';
-    document.getElementById('filterTo').value = '';
-    applyFilters();
-  }
-
-  function renderStats(reports){
-    document.getElementById('statTotal').textContent = reports.length;
-    const totalCharts = reports.reduce((sum,r)=> sum + (r.chartsAffected||0), 0);
-    document.getElementById('statCharts').textContent = totalCharts.toLocaleString();
-
-    const counts = {};
-    reports.forEach(r=>{ counts[r.requester] = (counts[r.requester]||0) + 1; });
-    let topRequester = '—';
-    let max = 0;
-    for(const k in counts){ if(counts[k] > max){ max = counts[k]; topRequester = k; } }
-    document.getElementById('statRequester').textContent = topRequester;
-
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    const recentCount = reports.filter(r=> new Date(r.date) >= sevenDaysAgo).length;
-    document.getElementById('statRecent').textContent = recentCount;
-  }
-
-  function renderTable(reports){
-    const scroll = document.getElementById('tableScroll');
-    document.getElementById('tableCount').textContent = `Reports (${reports.length})`;
-
-    if(reports.length === 0){
-      scroll.innerHTML = `
-        <div class="empty-state">
-          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M24 5C16 5 10 12 10 19.5C10 28 24 43 24 43C24 43 38 28 38 19.5C38 12 32 5 24 5Z" stroke="#1C3349" stroke-width="2"/>
-            <path d="M16 20 L23 14 L27 18 L34 11" stroke="#00A0C6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <p>No misrouted requests match these filters yet.</p>
-        </div>`;
-      return;
-    }
-
-    const rows = reports.map(r=>`
-      <tr>
-        <td class="mono">${escapeHtml(r.date || '')}</td>
-        <td><span class="pill">${escapeHtml(r.requester || '—')}</span></td>
-        <td>${escapeHtml(r.site || '—')}</td>
-        <td class="mono">${escapeHtml(r.workOrder || '—')}</td>
-        <td class="mono">${escapeHtml(r.siteId || '—')}</td>
-        <td class="mono">${escapeHtml(r.outreachId || '—')}</td>
-        <td class="charts-count">${r.chartsAffected ?? 0}</td>
-        <td>${escapeHtml(r.reporter || '—')}</td>
-        <td style="max-width:220px; color:var(--text-dim);">${escapeHtml(r.notes || '')}</td>
-      </tr>
-    `).join('');
-
-    scroll.innerHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Requester</th>
-            <th>Provider / site</th>
-            <th>Work Order #</th>
-            <th>Site ID #</th>
-            <th>Outreach ID #</th>
-            <th>Charts</th>
-            <th>Reported by</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>`;
-  }
-
-  function escapeHtml(str){
-    return String(str).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-  }
-  function escapeAttr(str){ return escapeHtml(str); }
-
-  function exportCSV(){
-    const headers = ['Date','Requester','Provider/Site','Work Order #','Site ID #','Outreach ID #','Charts Affected','Reported By','Visit Type','Notes'];
-    const rows = filteredReports.map(r => [
-      r.date, r.requester, r.site, r.workOrder, r.siteId, r.outreachId, r.chartsAffected, r.reporter, r.visitType, r.notes
-    ]);
-    const csvEscape = (val) => {
-      const s = (val === null || val === undefined) ? '' : String(val);
-      if(/[",\n]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
-      return s;
-    };
-    const csv = [headers, ...rows].map(row => row.map(csvEscape).join(',')).join('\n');
-    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'misrouted-request-log-' + new Date().toISOString().slice(0,10) + '.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
 </script>
