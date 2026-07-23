@@ -271,6 +271,14 @@
     return 'r' + Date.now() + '-' + Math.random().toString(36).slice(2,9);
   }
 
+  async function checkDuplicateWorkOrder(workOrder){
+    if(!workOrder) return false;
+    const response = await fetch(APPS_SCRIPT_URL, { method: 'GET' });
+    const reports = await response.json();
+    const target = workOrder.trim().toLowerCase();
+    return reports.some(r => (r.workOrder || '').toString().trim().toLowerCase() === target);
+  }
+
   document.getElementById('reportForm').addEventListener('submit', async (e)=>{
     e.preventDefault();
     clearBanner();
@@ -309,6 +317,26 @@
     }
 
     submitBtn.disabled = true;
+    submitBtn.textContent = 'Checking…';
+
+    try{
+      const isDuplicate = await checkDuplicateWorkOrder(report.workOrder);
+      if(isDuplicate){
+        const proceed = window.confirm(
+          'WO ' + report.workOrder + ' has already been reported. Are you sure you want to proceed with reporting this again?'
+        );
+        if(!proceed){
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Report';
+          return;
+        }
+      }
+    }catch(checkErr){
+      // If the duplicate check itself fails (e.g. network hiccup), don't block submission —
+      // just log it and let the report go through.
+      console.warn('Could not check for duplicate work orders:', checkErr);
+    }
+
     submitBtn.textContent = 'Submitting…';
 
     try{
