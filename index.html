@@ -97,6 +97,10 @@
     width:17px; height:17px; margin-top:2px; flex-shrink:0;
     accent-color:var(--teal); cursor:pointer;
   }
+  .confirm-note{
+    display:block; margin-top:6px; font-size:12.5px;
+    font-weight:400; font-style:italic; color:var(--text-dim);
+  }
   .btn{
     font-family:'Inter',sans-serif; font-weight:600; font-size:14px;
     border-radius:7px; padding:11px 20px; cursor:pointer; border:1px solid transparent;
@@ -229,7 +233,10 @@
         <div class="confirm-box">
           <label class="confirm-label">
             <input type="checkbox" id="f_confirm" required />
-            <span>I confirmed with an authorized contact at this office that these charts do not belong to this location.</span>
+            <span>
+              I've gone through each patient on this list, one by one, and confirmed with an authorized contact at this office that these charts do not belong to this location.
+              <span class="confirm-note">For remote sites: I checked every single patient on this list individually in the EMR and confirmed none of them are found there.</span>
+            </span>
           </label>
         </div>
 
@@ -240,10 +247,11 @@
       </form>
     </div>
   </div>
+
+  </div>
 </div>
 
 <script>
-  // ⚠️ PASTE your deployed Google Apps Script Web App URL below (ends in /exec)
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFqLs-iup_isSQxpP_zaU6D3WNLCSXusyWhBLwbvCk8Ymxm9s8Z4IdGmsFcB9IcxrL/exec';
 
   function clearBanner(){
@@ -332,8 +340,6 @@
         }
       }
     }catch(checkErr){
-      // If the duplicate check itself fails (e.g. network hiccup), don't block submission —
-      // just log it and let the report go through.
       console.warn('Could not check for duplicate work orders:', checkErr);
     }
 
